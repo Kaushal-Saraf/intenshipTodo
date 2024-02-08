@@ -1,7 +1,7 @@
 import { Request,Response } from "express";
-import { User, userDocs } from "../models/user";
+import { User } from "../models/user";
 import { createUser } from "../services/createUser";
-import { fetchUser } from "../services/findUser";
+import { fetchUser } from "../services/fetchUser";
 const home= async (req:Request,res:Response)=>{
     const {name,password,usertype} = await req.body;
     const newUser= new User({

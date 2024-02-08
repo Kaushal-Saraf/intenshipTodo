@@ -1,4 +1,4 @@
-import { User, userDocs } from "../models/user"
+import { User } from "../models/user"
 export async function fetchUser(userName:string){
     try{
         const result = await User.findOne({name:userName})

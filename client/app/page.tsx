@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Entry } from "./services/userServices";
 import { useRouter } from "next/navigation";
 export default function Home() {
-  const router= useRouter()
+  const router = useRouter();
   const [details, setdetails] = useState({
     name: "",
     password: "",
@@ -28,14 +28,14 @@ export default function Home() {
     } else {
       toast.loading("Creating account.");
     }
-    try{
-      const result = await Entry(details)
-      router.push(`/${details.name}`)
-    }
-    catch(error:any){
-      toast.dismiss()
-      toast.error(error.response.data.message)
-      setisdisabled(false)
+    try {
+      await Entry(details);
+      toast.dismiss();
+      router.push(`/${details.name}`);
+    } catch (error: any) {
+      toast.dismiss();
+      toast.error(error.response.data.message);
+      setisdisabled(false);
     }
   };
   const handleValueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

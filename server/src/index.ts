@@ -1,4 +1,4 @@
-import express, {Request,Response} from "express"
+import express from "express"
 import { router } from "./routes/route"
 import connects from "./config/db";
 import bodyParser from "body-parser";
