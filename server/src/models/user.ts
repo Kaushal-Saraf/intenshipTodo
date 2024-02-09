@@ -4,8 +4,8 @@ export interface todoDocs extends Document{
     title: string;
     description:string;
     completed: boolean;
-    startdate:Date;
-    enddate:Date;
+    startdate:string;
+    enddate:string;
 }
 export interface userDocs extends Document{
     name: string;

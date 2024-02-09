@@ -28,9 +28,22 @@ const ToDo: React.FC<ToDoProps> = ({
         <p>{description}</p>
       </div>
       <div className="flex-col border-l-2 w-[175px] border-black px-4 py-4 justify-between">
-        <h2 className=" border-b-2 border-black">Start Date <p>{startDate}</p></h2>
-        <h2 className=" border-b-2 border-black mt-4">Deadline <p>{endDate}</p></h2>
-        <h2 className=" border-b-2 border-black mt-4">Status<p>{completed ? "Completed" : "Not Completed"}</p></h2>
+        <h2 className=" border-b-2 border-black">
+          Start Date <p>{startDate}</p>
+        </h2>
+        <h2 className=" border-b-2 border-black mt-4">
+          Deadline <p>{endDate}</p>
+        </h2>
+        <h2 className=" border-b-2 border-black mt-4">
+          Status
+          <div>
+            {completed ? (
+              <p className="text-green-400 font-bold">Completed</p>
+            ) : (
+              <p className="text-red-400 font-bold">Not Completed</p>
+            )}
+          </div>
+        </h2>
       </div>
     </div>
   );

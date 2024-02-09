@@ -3,9 +3,9 @@ import { LuLogOut } from "react-icons/lu";
 import ToDo from "../component/todos";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { addTodo, getDetails } from "../services/userServices";
+import { addTodo, deleteCompletedTodo, deleteSelectedIds, getDetails, markAsCompleted, sortByEndDate } from "../services/userServices";
 import dateconverter from "../utils/dateconverter";
-import verifyString from "../utils/verifier";
+import { extractNumbers } from "../utils/extractNumbers";
 export default function id({ params }: { params: { id: string } }) {
   interface ToDoItem {
     id: number;
@@ -15,7 +15,10 @@ export default function id({ params }: { params: { id: string } }) {
     enddate: string;
     completed: boolean;
   }
+  const [deleteIdArray, setdeleteIdArray] = useState<number[]>([])
+  const [idArray, setidArray] = useState<number[]>([])
   const [todos, settodos] = useState<ToDoItem[]>([]);
+  const [avilableTodos, setavilableTodos] = useState(false);
   const [ids, setids] = useState("");
   const [disable, setdisable] = useState(false);
   const [completeids, setcompleteids] = useState("");
@@ -30,6 +33,9 @@ export default function id({ params }: { params: { id: string } }) {
       try {
         const result = await getDetails(params.id);
         settodos(result.todos);
+        if (result.todos.length !== 0) {
+          setavilableTodos(true);
+        }
       } catch (error) {
         toast.error("Failed to load todos.");
       }
@@ -64,38 +70,109 @@ export default function id({ params }: { params: { id: string } }) {
         start: "",
         end: "",
       });
+      setavilableTodos(true)
       settodos(result.todos);
       setdisable(false);
     } catch (error) {
       toast.error("Error uploading todo.");
     }
   };
-  const handleDeletion = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!verifyString(ids) || ids.trim() === "") {
-      toast.dismiss();
-      toast.error("Inputs cannot be empty or cannot contain any character.");
-      return;
-    }
-    toast.loading("Deleting.");
-    setdisable(true);
-  };
   const handleCompletion = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (completeids.trim() === "" || !verifyString(completeids)) {
-      toast.dismiss();
-      toast.error("Inputs cannot be empty or cannot contain any character.");
-      return;
+    if(idArray.length===0){
+      toast.dismiss()
+      toast.error("Please enter correct input ids.")
+      return ;
     }
-    toast.loading("Marking as completed.");
-    setdisable(true);
+    else if(idArray[0]===0 || idArray[idArray.length-1]>todos.length ){
+      toast.dismiss()
+      toast.error("Please enter correct input ids.")
+      return ;
+    }
+    try {
+      toast.dismiss();
+      toast.loading("Marking as completed.");
+      setdisable(true);
+      const completedIds = {completeIds: idArray}
+      const result = await markAsCompleted(params.id, completedIds);
+      toast.dismiss();
+      toast.success("Sucessfully marked.");
+      setdisable(false);
+      setcompleteids("");
+      setidArray([]);
+      settodos(result.todos);
+    } catch (error) {
+      toast.error("Error Marking completed.");
+    }
   };
-  const deleteCompleted=async()=>{
-
+  const handleDeletion = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(deleteIdArray.length===0){
+      toast.dismiss()
+      toast.error("Please enter correct input ids.")
+      return ;
+    }
+    else if(deleteIdArray[0]===0 || deleteIdArray[deleteIdArray.length-1]>todos.length ){
+      toast.dismiss()
+      toast.error("Please enter correct input ids.")
+      return ;
+    }
+    try {
+      toast.dismiss();
+      toast.loading("Deleting Ids.");
+      setdisable(true);
+      const deleteIds = {deleteIds: deleteIdArray}
+      const result = await deleteSelectedIds(params.id, deleteIds);
+      toast.dismiss();
+      toast.success("Sucessfully deleted.");
+      if(result.length===0){
+        setavilableTodos(false)
+      }
+      setids("")
+      settodos(result);
+      setdeleteIdArray([])
+      setdisable(false);
+    } catch (error) {
+      console.log(error)
+      toast.error("Error Deleting.");
+    }
   }
-  const sortByDeadline=async()=>{
-
-  }
+  const deleteCompleted = async () => {
+    try {
+      toast.dismiss()
+      toast.loading("Deleting Completed todos.")
+      setdisable(true)
+      const result = await deleteCompletedTodo(params.id);
+      toast.dismiss();
+      toast.success("Sucessfully deleted completed Todos.");
+      if(result.length===0){
+        setavilableTodos(false)
+      }
+      settodos(result);
+      setdisable(false);
+    } catch (error) {
+      toast.error("Cannot delete all the completed todos.")
+    }
+  };
+  const sortByDeadline = async () => {
+    try {
+      if(todos.length===0){
+        toast.dismiss()
+        toast.error("No todos available.")
+        return
+      }
+      toast.dismiss()
+      toast.loading("Sorting tasks by deadline.")
+      setdisable(true)
+      const result = await sortByEndDate(params.id);
+      toast.dismiss();
+      toast.success("Sucessfully sorted all Todos.");
+      settodos(result);
+      setdisable(false);
+    } catch (error) {
+      toast.error("Cannot sort todos.")
+    }
+  };
   return (
     <>
       <Toaster position="top-right" />
@@ -108,20 +185,9 @@ export default function id({ params }: { params: { id: string } }) {
           </div>
         </button>
       </div>
-      {todos.map((todo) => (
-        <ToDo
-          key={todo.id}
-          id={todo.id}
-          title={todo.title}
-          description={todo.description}
-          startDate={dateconverter(todo.startdate)}
-          endDate={dateconverter(todo.enddate)}
-          completed={todo.completed}
-        />
-      ))}
       <form
         onSubmit={handleSubmit}
-        className="bg-blue-300 mx-6 px-2 py-2 my-6 rounded"
+        className="bg-blue-300 mx-6 px-2 py-2 my-4 rounded"
       >
         <div className="flex">
           <div className="my-4">
@@ -145,14 +211,14 @@ export default function id({ params }: { params: { id: string } }) {
               type="text"
               id="description"
               name="desc"
-              className="rounded w-[30rem] px-2"
+              className="rounded w-[775px] px-2"
               value={details.desc}
               onChange={handleChange}
             />
             <p className="text-sm">Number of words = {details.desc.length}</p>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex justify-between">
           <div className="my-4">
             <label htmlFor="startDate" className="mx-2">
               Start Date
@@ -190,35 +256,43 @@ export default function id({ params }: { params: { id: string } }) {
           </div>
         </div>
       </form>
-      <form onSubmit={handleDeletion}>
-        <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
-          <label htmlFor="inputs" className="mx-2">
-            Add Todo Id's you want to delete seperated by commas
-          </label>
-          <input
-            type="text"
-            className="mx-2 rounded px-2"
-            placeholder="1, 5, 3, 14"
-            id="inputs"
-            name="inputs"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setids(e.target.value);
-            }}
-            value={ids}
-          ></input>
-          <button
-            type="submit"
-            disabled={disable}
-            className="mx-2 rounded px-2 bg-white"
-          >
-            Delete
-          </button>
+      <div className="flex justify-center bg-blue-300 rounded mx-6 py-2">
+        <button
+          className="rounded bg-white mx-4 px-2"
+          disabled={disable}
+          onClick={deleteCompleted}
+        >
+          Delete all Completed Task
+        </button>
+        <button
+          className="rounded bg-white mx-4 px-2"
+          disabled={disable}
+          onClick={sortByDeadline}
+        >
+          Sort Task By Deadline
+        </button>
+      </div>
+      {avilableTodos ? (
+        todos.map((todo) => (
+          <ToDo
+            key={todo.id}
+            id={todo.id}
+            title={todo.title}
+            description={todo.description}
+            startDate={dateconverter(todo.startdate)}
+            endDate={dateconverter(todo.enddate)}
+            completed={todo.completed}
+          />
+        ))
+      ) : (
+        <div className="text-center font-bold text-5xl text-blue-200">
+          No Todos Available
         </div>
-      </form>
+      )}
       <form onSubmit={handleCompletion}>
         <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
           <label htmlFor="completedinputs" className="mx-2">
-            Add Todo Id's you want mark as completed seperated by commas
+            Todo Id's I want mark as completed seperated by commas
           </label>
           <input
             type="text"
@@ -229,6 +303,7 @@ export default function id({ params }: { params: { id: string } }) {
             readOnly={disable}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setcompleteids(e.target.value);
+              setidArray(extractNumbers(e.target.value))
             }}
             value={completeids}
           ></input>
@@ -237,18 +312,36 @@ export default function id({ params }: { params: { id: string } }) {
             disabled={disable}
             className="mx-2 rounded px-2 bg-white"
           >
-            Mark as Completed
+            Completed
           </button>
         </div>
       </form>
-      <div className="flex justify-center bg-blue-300 mx-6 my-4 py-2">
-        <button className="rounded bg-white mx-4 px-2" disabled={disable} onClick={deleteCompleted}>
-          Delete all Completed Task
-        </button>
-        <button className="rounded bg-white mx-4 px-2" disabled={disable} onClick={sortByDeadline}>
-          Sort Task By Deadline
-        </button>
-      </div>
+      <form onSubmit={handleDeletion}>
+        <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
+          <label htmlFor="inputs" className="mx-2 inline-block w-[440px]">
+            Todo Id's I want to delete seperated by commas
+          </label>
+          <input
+            type="text"
+            className="mx-2 rounded px-2"
+            placeholder="1, 5, 3, 14"
+            id="inputs"
+            name="inputs"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setids(e.target.value);
+              setdeleteIdArray(extractNumbers(e.target.value));
+            }}
+            value={ids}
+          ></input>
+          <button
+            type="submit"
+            disabled={disable}
+            className="mx-2 rounded px-2 bg-white w-[100px]"
+          >
+            Delete
+          </button>
+        </div>
+      </form>
     </>
   );
 }

@@ -1,6 +1,6 @@
-function verifyString(s:string) {
+function verifyString(s: string) {
     for (let i = 0; i < s.length; i++) {
-        if (s[i] !== ',' &&  isNaN(parseInt(s[i]))) {
+        if (s[i] !== ',' && s[i]!==' ' && isNaN(parseInt(s[i]))) {
             return false;
         }
     }
