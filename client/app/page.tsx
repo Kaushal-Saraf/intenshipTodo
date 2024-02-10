@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Entry } from "./services/userServices";
+import { enterCredentials, getHome } from "./services/userServices";
 import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function Home() {
       toast.loading("Creating account.");
     }
     try {
-      await Entry(details);
+      await enterCredentials(details);
       toast.dismiss();
       router.push(`/${details.name}`);
     } catch (error: any) {

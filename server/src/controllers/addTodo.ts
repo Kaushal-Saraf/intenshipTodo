@@ -1,9 +1,10 @@
 import { fetchUser } from "../services/fetchUser"
 import { Request,Response } from "express";
 import { updateUserTodo } from "../services/updateUserTodo";
+import { todoDocs, userDocs } from "../models/user";
 
-const addTodo= async (req:Request,res:Response)=>{
-    const result:any = await fetchUser(req.params.id);
+const addTodo= async (req:Request<{ id: string }, any, { title: string, desc: string, start: string, end: string }>,res:Response)=>{
+    const result: any = await fetchUser(req.params.id);
     if(result===null){
         res.json({message:"user doesn't exists"})
     }
@@ -18,7 +19,7 @@ const addTodo= async (req:Request,res:Response)=>{
             startdate: start,
             enddate:end
         });
-        const todos = [...result.todos , newtodo]
+        const todos:todoDocs[] = [...result.todos , newtodo]
         await updateUserTodo(result.name, todos)
         const updatedUser = await fetchUser(result.name)
         res.json(updatedUser)

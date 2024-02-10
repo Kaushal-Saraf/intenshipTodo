@@ -8,7 +8,10 @@ require('dotenv').config();
 connects(process.env.MONGO_DB_URL)
 const app = express()
 app.use(bodyParser.json());
-app.use(cors()); 
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })); 
 app.use("/",router)
 app.listen(process.env.PORT,()=>{
     console.log(`server started...`)

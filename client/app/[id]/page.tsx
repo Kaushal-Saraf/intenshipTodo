@@ -6,7 +6,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { addTodo, deleteCompletedTodo, deleteSelectedIds, getDetails, markAsCompleted, sortByEndDate } from "../services/userServices";
 import dateconverter from "../utils/dateconverter";
 import { extractNumbers } from "../utils/extractNumbers";
+import { useRouter } from "next/navigation";
 export default function id({ params }: { params: { id: string } }) {
+  const router = useRouter()
   interface ToDoItem {
     id: number;
     title: string;
@@ -36,9 +38,7 @@ export default function id({ params }: { params: { id: string } }) {
         if (result.todos.length !== 0) {
           setavilableTodos(true);
         }
-      } catch (error) {
-        toast.error("Failed to load todos.");
-      }
+      } catch (error) {}
     };
 
     fetchData();
@@ -173,12 +173,15 @@ export default function id({ params }: { params: { id: string } }) {
       toast.error("Cannot sort todos.")
     }
   };
+  const handleLogout = async () => {
+    router.push('/')     
+  };
   return (
     <>
       <Toaster position="top-right" />
       <div className="flex justify-between">
         <h1 className="mx-6 my-4 text-2xl text-blue-500 font-bold">My Todos</h1>
-        <button className=" bg-blue-100 rounded px-2 mx-6 my-4 text-l text-blue-500 font-bold">
+        <button onClick={handleLogout}className=" bg-blue-100 rounded px-2 mx-6 my-4 text-l text-blue-500 font-bold">
           <div className="flex">
             <LuLogOut className="my-1 mx-2" />
             <p>Logout</p>
