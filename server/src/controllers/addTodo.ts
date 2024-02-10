@@ -3,7 +3,7 @@ import { Request,Response } from "express";
 import { updateUserTodo } from "../services/updateUserTodo";
 import { todoDocs, userDocs } from "../models/user";
 
-const addTodo= async (req:Request<{ id: string }, any, { title: string, desc: string, start: string, end: string }>,res:Response)=>{
+const addTodo= async (req:Request,res:Response)=>{
     const result: userDocs|null = await fetchUser(req.params.id) as userDocs;
     if(result===null){
         res.json({message:"user doesn't exists"})

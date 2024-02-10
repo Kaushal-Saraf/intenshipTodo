@@ -29,13 +29,18 @@ export default function Home() {
       toast.loading("Creating account.");
     }
     try {
-      await enterCredentials(details);
-      toast.dismiss();
-      router.push(`/${details.name}`);
-    } catch (error: any) {
-      toast.dismiss();
-      toast.error(error.response.data.message);
-      setisdisabled(false);
+      const result = await enterCredentials(details);
+      if(result.message==="Sucess"){
+        toast.dismiss();
+        router.push(`/${details.name}`);
+      }
+      else{
+        toast.dismiss();
+        toast.error(result.message);
+        setisdisabled(false);
+      }
+    } catch (error) {
+      toast.error("cannot connect to server.")
     }
   };
   const handleValueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
