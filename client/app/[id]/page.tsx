@@ -225,7 +225,7 @@ export default function id({ params }: { params: { id: string } }) {
             <textarea
               id="description"
               name="desc"
-              className="rounded w-full"
+              className="rounded w-full px-2"
               value={details.desc}
               onChange={handleTextChange}
             />
