@@ -9,6 +9,7 @@ connects(process.env.MONGO_DB_URL as string)
 const app = express()
 app.use(bodyParser.json());
 app.use(cors({
+    origin: "https://intenship-todo.vercel.app/",
     credentials: true,
   })); 
 app.use("/",router)

@@ -19,10 +19,10 @@ const home= async (req:Request,res:Response)=>{
         else{
             await createUser(newUser)
             const token = await setUser(name, process.env.SECRETKEY as string)
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
             res.setHeader('Access-Control-Allow-Credentials',"true");
-            res.cookie("uid",newUser.name,{httpOnly:true,sameSite:"lax",secure:false,path: "/",domain: "localhost",})
+            res.cookie("uid",newUser.name,{httpOnly:true,sameSite:"lax",path: "/"})
             res.status(200)
             res.json({message:"Sucess"})
         }
@@ -39,7 +39,7 @@ const home= async (req:Request,res:Response)=>{
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
                 res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
                 res.setHeader('Access-Control-Allow-Credentials',"true");
-                res.cookie("uid",exists.name,{httpOnly:true,sameSite:"lax",secure:false,path: "/",domain: "localhost",})
+                res.cookie("uid",exists.name,{httpOnly:true,sameSite:"lax",path: "/"})
                 res.status(200)
                 res.json({message:"Sucess"})
             }
