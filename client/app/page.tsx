@@ -65,7 +65,7 @@ export default function Home() {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="w-[450px] h-[300px] bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
+        className="w-[400px] h-[300px] bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
       >
         <div className="flex flex-col justify-center my-10">
           <label className="flex flex-row justify-center align-middle my-6">
