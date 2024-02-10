@@ -50,6 +50,13 @@ export default function id({ params }: { params: { id: string } }) {
       [name]: value,
     }));
   };
+  const handleTextChange= (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+    const { name, value } = e.target;
+    setdetails((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (details.title.trim() === "") {
@@ -156,32 +163,35 @@ export default function id({ params }: { params: { id: string } }) {
   };
   const sortByDeadline = async () => {
     try {
-      if(todos.length===0){
-        toast.dismiss()
-        toast.error("No todos available.")
-        return
+      if (todos.length === 0) {
+        toast.dismiss();
+        toast.error("No todos available.");
+        return;
       }
-      toast.dismiss()
-      toast.loading("Sorting tasks by deadline.")
-      setdisable(true)
+      toast.dismiss();
+      toast.loading("Sorting tasks by deadline.");
+      setdisable(true);
       const result = await sortByEndDate(params.id);
       toast.dismiss();
       toast.success("Sucessfully sorted all Todos.");
       settodos(result);
       setdisable(false);
     } catch (error) {
-      toast.error("Cannot sort todos.")
+      toast.error("Cannot sort todos.");
     }
   };
   const handleLogout = async () => {
-    router.push('/')     
+    router.push("/");
   };
   return (
     <>
       <Toaster position="top-right" />
       <div className="flex justify-between">
         <h1 className="mx-6 my-4 text-2xl text-blue-500 font-bold">My Todos</h1>
-        <button onClick={handleLogout}className=" bg-blue-100 rounded px-2 mx-6 my-4 text-l text-blue-500 font-bold">
+        <button
+          onClick={handleLogout}
+          className=" bg-blue-100 rounded px-2 mx-6 my-4 text-l text-blue-500 font-bold"
+        >
           <div className="flex">
             <LuLogOut className="my-1 mx-2" />
             <p>Logout</p>
@@ -192,7 +202,7 @@ export default function id({ params }: { params: { id: string } }) {
         onSubmit={handleSubmit}
         className="bg-blue-300 mx-6 px-2 py-2 my-4 rounded"
       >
-        <div className="flex">
+        <div className="flex justify-center">
           <div className="my-4">
             <label htmlFor="title" className="w-[40px] inline-block">
               Title
@@ -206,26 +216,25 @@ export default function id({ params }: { params: { id: string } }) {
               onChange={handleChange}
             />
           </div>
-          <div className="my-4 flex-1 mx-4">
-            <label htmlFor="description" className="w-[100px] inline-block">
+        </div>
+        <div className="flex justify-center">
+        <div className="my-4 w-full mx-4">
+            <label htmlFor="description" className="my-1 block">
               Description
             </label>
-            <input
-              type="text"
+            <textarea
               id="description"
               name="desc"
-              className="rounded w-[775px] px-2"
+              className="rounded w-full"
               value={details.desc}
-              onChange={handleChange}
+              onChange={handleTextChange}
             />
             <p className="text-sm">Number of words = {details.desc.length}</p>
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="my-4">
-            <label htmlFor="startDate" className="mx-2">
-              Start Date
-            </label>
+        <div className="flex flex-wrap justify-center">
+          <div className="my-4 mx-2">
+            <label htmlFor="startDate">Start Date</label>
             <input
               type="datetime-local"
               id="startDate"
@@ -235,7 +244,7 @@ export default function id({ params }: { params: { id: string } }) {
               onChange={handleChange}
             />
           </div>
-          <div className="my-4">
+          <div className="my-4 mx-2">
             <label htmlFor="endDate" className="mx-2">
               End Date
             </label>
@@ -248,7 +257,7 @@ export default function id({ params }: { params: { id: string } }) {
               onChange={handleChange}
             />
           </div>
-          <div className="mx-10 my-4">
+          <div className="my-4 mx-2">
             <button
               type="submit"
               disabled={disable}
@@ -294,26 +303,26 @@ export default function id({ params }: { params: { id: string } }) {
       )}
       <form onSubmit={handleCompletion}>
         <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
-          <label htmlFor="completedinputs" className="mx-2">
+          <label htmlFor="completedinputs" className="mx-2 my-2">
             Todo Id's I want mark as completed seperated by commas
           </label>
           <input
             type="text"
-            className="mx-2 rounded px-2"
+            className="mx-2 rounded px-2 my-2"
             placeholder="1, 5, 3, 14"
             id="completedinputs"
             name="completedinputs"
             readOnly={disable}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setcompleteids(e.target.value);
-              setidArray(extractNumbers(e.target.value))
+              setidArray(extractNumbers(e.target.value));
             }}
             value={completeids}
           ></input>
           <button
             type="submit"
             disabled={disable}
-            className="mx-2 rounded px-2 bg-white"
+            className="mx-2 my-2 rounded px-2 bg-white"
           >
             Completed
           </button>
@@ -321,12 +330,12 @@ export default function id({ params }: { params: { id: string } }) {
       </form>
       <form onSubmit={handleDeletion}>
         <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
-          <label htmlFor="inputs" className="mx-2 inline-block w-[440px]">
+          <label htmlFor="inputs" className="mx-2  my-2 pr-[75px] w-[440px]">
             Todo Id's I want to delete seperated by commas
           </label>
           <input
             type="text"
-            className="mx-2 rounded px-2"
+            className="mx-2 my-2 rounded px-2"
             placeholder="1, 5, 3, 14"
             id="inputs"
             name="inputs"
@@ -339,7 +348,7 @@ export default function id({ params }: { params: { id: string } }) {
           <button
             type="submit"
             disabled={disable}
-            className="mx-2 rounded px-2 bg-white w-[100px]"
+            className="mx-2 my-2 rounded px-2 bg-white w-[100px]"
           >
             Delete
           </button>
