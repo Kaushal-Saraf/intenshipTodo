@@ -1,9 +1,10 @@
 import { Request,Response } from "express";
 import { fetchUser } from "../services/fetchUser";
 import { updateUserTodo } from "../services/updateUserTodo";
+import { userDocs } from "../models/user";
 
 const markAsCompleted = async (req:Request,res:Response)=>{
-    const result:any = await fetchUser(req.params.id);
+    const result:userDocs = await fetchUser(req.params.id) as userDocs;
     const {completeIds} = await req.body;
     if(completeIds===undefined){
         res.json({message: "Not the right input."})

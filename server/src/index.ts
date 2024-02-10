@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 const cors = require('cors');
 
 require('dotenv').config();
-connects(process.env.MONGO_DB_URL)
+connects(process.env.MONGO_DB_URL as string)
 const app = express()
 app.use(bodyParser.json());
 app.use(cors({

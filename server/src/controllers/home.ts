@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { User } from "../models/user";
+import { User, userDocs } from "../models/user";
 import { createUser } from "../services/createUser";
 import { fetchUser } from "../services/fetchUser";
 import { setUser } from "../services/auth";
@@ -28,7 +28,7 @@ const home= async (req:Request,res:Response)=>{
         }
     }
     else{
-        const exists:any = await fetchUser(newUser.name)
+        const exists:userDocs = await fetchUser(newUser.name) as userDocs
         if(exists===null){
             res.status(200)
             res.json({message:"User doesn't exists."})

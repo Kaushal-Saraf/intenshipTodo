@@ -4,7 +4,7 @@ import { updateUserTodo } from "../services/updateUserTodo";
 import { todoDocs, userDocs } from "../models/user";
 
 const addTodo= async (req:Request<{ id: string }, any, { title: string, desc: string, start: string, end: string }>,res:Response)=>{
-    const result: any = await fetchUser(req.params.id);
+    const result: userDocs|null = await fetchUser(req.params.id) as userDocs;
     if(result===null){
         res.json({message:"user doesn't exists"})
     }
