@@ -1,35 +1,36 @@
 "use client";
 import { LuLogOut } from "react-icons/lu";
-import ToDo from "../component/todos";
+import ToDo from "../../component/todos";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { addTodo, deleteCompletedTodo, deleteSelectedIds, getDetails, markAsCompleted, sortByEndDate } from "../services/userServices";
-import dateconverter from "../utils/dateconverter";
-import { extractNumbers } from "../utils/extractNumbers";
+import { addTodo, deleteCompletedTodo, deleteSelectedIds, getDetails, markAsCompleted, sortByEndDate } from "../../services/userServices";
+import dateconverter from "../../utils/dateconverter";
+import { extractNumbers } from "../../utils/extractNumbers";
 import { useRouter } from "next/navigation";
+interface ToDoItem {
+  id: number;
+  title: string;
+  description: string;
+  startdate: string;
+  enddate: string;
+  completed: boolean;
+}
+
 export default function id({ params }: { params: { id: string } }) {
-  const router = useRouter()
-  interface ToDoItem {
-    id: number;
-    title: string;
-    description: string;
-    startdate: string;
-    enddate: string;
-    completed: boolean;
-  }
-  const [deleteIdArray, setdeleteIdArray] = useState<number[]>([])
-  const [idArray, setidArray] = useState<number[]>([])
+  const [deleteidarray, setdeleteidarray] = useState<number[]>([])
+  const [completeidarray, setcompleteidarray] = useState<number[]>([])
   const [todos, settodos] = useState<ToDoItem[]>([]);
   const [avilableTodos, setavilableTodos] = useState(false);
-  const [ids, setids] = useState("");
+  const [deleteids, setdeleteids] = useState("");
   const [disable, setdisable] = useState(false);
   const [completeids, setcompleteids] = useState("");
   const [details, setdetails] = useState({
-    title: "",
-    desc: "",
-    start: "",
-    end: "",
+      title: "",
+      desc: "",
+      start: "",
+      end: "",
   });
+  const router = useRouter()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,7 +41,7 @@ export default function id({ params }: { params: { id: string } }) {
         }
       } catch (error) {}
     };
-
+    
     fetchData();
   }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,12 +87,12 @@ export default function id({ params }: { params: { id: string } }) {
   };
   const handleCompletion = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(idArray.length===0){
+    if(completeidarray.length===0){
       toast.dismiss()
       toast.error("Please enter correct input ids.")
       return ;
     }
-    else if(idArray[0]===0 || idArray[idArray.length-1]>todos.length ){
+    else if(completeidarray[0]===0 || completeidarray[completeidarray.length-1]>todos.length ){
       toast.dismiss()
       toast.error("Please enter correct input ids.")
       return ;
@@ -100,13 +101,13 @@ export default function id({ params }: { params: { id: string } }) {
       toast.dismiss();
       toast.loading("Marking as completed.");
       setdisable(true);
-      const completedIds = {completeIds: idArray}
+      const completedIds = {completeIds: completeidarray}
       const result = await markAsCompleted(params.id, completedIds);
       toast.dismiss();
       toast.success("Sucessfully marked.");
       setdisable(false);
       setcompleteids("");
-      setidArray([]);
+      setcompleteidarray([]);
       settodos(result.todos);
     } catch (error) {
       toast.error("Error Marking completed.");
@@ -114,12 +115,12 @@ export default function id({ params }: { params: { id: string } }) {
   };
   const handleDeletion = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(deleteIdArray.length===0){
+    if(deleteidarray.length===0){
       toast.dismiss()
       toast.error("Please enter correct input ids.")
       return ;
     }
-    else if(deleteIdArray[0]===0 || deleteIdArray[deleteIdArray.length-1]>todos.length ){
+    else if(deleteidarray[0]===0 || deleteidarray[deleteidarray.length-1]>todos.length ){
       toast.dismiss()
       toast.error("Please enter correct input ids.")
       return ;
@@ -128,16 +129,16 @@ export default function id({ params }: { params: { id: string } }) {
       toast.dismiss();
       toast.loading("Deleting Ids.");
       setdisable(true);
-      const deleteIds = {deleteIds: deleteIdArray}
+      const deleteIds = {deleteIds: deleteidarray}
       const result = await deleteSelectedIds(params.id, deleteIds);
       toast.dismiss();
       toast.success("Sucessfully deleted.");
       if(result.length===0){
         setavilableTodos(false)
       }
-      setids("")
+      setdeleteids("")
       settodos(result);
-      setdeleteIdArray([])
+      setdeleteidarray([])
       setdisable(false);
     } catch (error) {
       console.log(error)
@@ -315,7 +316,7 @@ export default function id({ params }: { params: { id: string } }) {
             readOnly={disable}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setcompleteids(e.target.value);
-              setidArray(extractNumbers(e.target.value));
+              setcompleteidarray(extractNumbers(e.target.value));
             }}
             value={completeids}
           ></input>
@@ -340,10 +341,10 @@ export default function id({ params }: { params: { id: string } }) {
             id="inputs"
             name="inputs"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setids(e.target.value);
-              setdeleteIdArray(extractNumbers(e.target.value));
+              setdeleteids(e.target.value);
+              setdeleteidarray(extractNumbers(e.target.value));
             }}
-            value={ids}
+            value={deleteids}
           ></input>
           <button
             type="submit"

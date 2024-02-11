@@ -5,6 +5,15 @@ import { enterCredentials, getHome } from "./services/userServices";
 import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getHome();
+      } catch (error) {}
+    };
+  
+    fetchData();
+  }, []);
   const [details, setdetails] = useState({
     name: "",
     password: "",
@@ -23,7 +32,7 @@ export default function Home() {
       return;
     }
     setisdisabled(true);
-    if (details.usertype === "Existing") {
+    if(details.usertype === "Existing") {
       toast.loading("Fetching todo's");
     } else {
       toast.loading("Creating account.");
