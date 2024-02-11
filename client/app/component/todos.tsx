@@ -23,7 +23,7 @@ const ToDo: React.FC<ToDoProps> = ({
       <div className="flex-col flex-1">
         <div className="flex border-b-2 border-black py-2">
           <h2 className=" w-full text-center font-bold text-xl">
-            <p className=" bg-white px-4 ml-2 inline-block py-1 rounded-full font-bold">{id}</p>
+            <p className=" bg-white px-4 mr-4 inline-block py-1 rounded-full font-bold">{id}</p>
             {title}
           </h2>
         </div>
