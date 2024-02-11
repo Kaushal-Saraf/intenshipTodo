@@ -41,7 +41,7 @@ export default function Home() {
       const result = await enterCredentials(details);
       if(result.message==="Sucess"){
         toast.dismiss();
-        router.push(`/${details.name}`);
+        router.push(`/id/${details.name}`);
       }
       else{
         toast.dismiss();

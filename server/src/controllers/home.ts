@@ -22,7 +22,7 @@ const home= async (req:Request,res:Response)=>{
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
             res.setHeader('Access-Control-Allow-Credentials',"true");
-            res.cookie("uid",newUser.name,{httpOnly:true,sameSite:"lax",path: "/"})
+            res.cookie("uid",token,{httpOnly:true,sameSite:"lax",path: "/"})
             res.status(200)
             res.json({message:"Sucess"})
         }
@@ -39,7 +39,7 @@ const home= async (req:Request,res:Response)=>{
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
                 res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
                 res.setHeader('Access-Control-Allow-Credentials',"true");
-                res.cookie("uid",exists.name,{httpOnly:true,sameSite:"lax",path: "/"})
+                res.cookie("uid",token,{sameSite:"lax",path: "/"})
                 res.status(200)
                 res.json({message:"Sucess"})
             }
