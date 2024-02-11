@@ -22,10 +22,8 @@ const ToDo: React.FC<ToDoProps> = ({
     <div className="flex mx-6 px-2 py-2 my-6 justify-between rounded  bg-blue-100">
       <div className="flex-col flex-1">
         <div className="flex border-b-2 border-black py-2">
-          <h2 className=" w-full text-center font-bold text-xl">
-            <p className=" bg-white px-4 mr-4 inline-block py-1 rounded-full font-bold">{id}</p>
-            {title}
-          </h2>
+          <p className=" bg-white px-3 py-1 rounded-full font-bold">{id}</p>
+          <h2 className=" w-full text-center font-bold text-xl">{title}</h2>
         </div>
         <p>{description}</p>
       </div>
