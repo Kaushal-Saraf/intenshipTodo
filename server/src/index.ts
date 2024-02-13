@@ -13,7 +13,6 @@ app.use(cors({
     origin: "https://intenship-todo.vercel.app",
     credentials: true,
   })); 
-app.use(authMiddleWare)
 app.use("/",router)
 app.listen(process.env.PORT,()=>{
     console.log(`server started...`)
