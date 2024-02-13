@@ -11,7 +11,7 @@ export default function Home() {
         const result = await getHome();
       } catch (error) {}
     };
-  
+
     fetchData();
   }, []);
   const [details, setdetails] = useState({
@@ -32,24 +32,23 @@ export default function Home() {
       return;
     }
     setisdisabled(true);
-    if(details.usertype === "Existing") {
+    if (details.usertype === "Existing") {
       toast.loading("Fetching todo's");
     } else {
       toast.loading("Creating account.");
     }
     try {
       const result = await enterCredentials(details);
-      if(result.message==="Sucess"){
+      if (result.message === "Sucess") {
         toast.dismiss();
         router.push(`/id/${details.name}`);
-      }
-      else{
+      } else {
         toast.dismiss();
         toast.error(result.message);
         setisdisabled(false);
       }
     } catch (error) {
-      toast.error("cannot connect to server.")
+      toast.error("cannot connect to server.");
     }
   };
   const handleValueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -74,25 +73,26 @@ export default function Home() {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="w-[400px] h-[300px] bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
+        className="w-[350px] p-4 bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
       >
-        <div className="flex flex-col justify-center my-10">
-          <label className="flex flex-row justify-center align-middle my-6">
-            <p className="flex-1 text-center text-white font-bold">User Name</p>
+          <div className="flex mt-10 px-2 w-full">
+            <label htmlFor="name" className="flex-1 text-center font-semibold">
+              User Name
+            </label>
             <input
               type="text"
               placeholder="hello"
               name="name"
               id="name"
               autoComplete="given-name"
-              className="mr-10 flex-1 rounded-sm text-center focus:outline-blue-400"
+              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
               onChange={handleChange}
               value={details?.name}
               readOnly={isdisabled}
             ></input>
-          </label>
-          <label className="flex flex-row justify-center align-middle my-6">
-            <p className="flex-1 text-center text-white font-bold">Password</p>
+          </div>
+          <div className="flex my-12 px-2 w-full">
+            <label className="flex-1 text-center font-semibold">Password</label>
             <input
               readOnly={isdisabled}
               type="password"
@@ -100,16 +100,16 @@ export default function Home() {
               id="password"
               placeholder="********"
               autoComplete="current-password"
-              className="mr-10 flex-1 rounded-sm text-center focus:outline-blue-400"
+              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
               onChange={handleChange}
               value={details?.password}
             ></input>
-          </label>
-          <label className="flex flex-row justify-center align-middle my-6">
-            <p className="flex-1 text-center text-white font-bold">User Type</p>
+          </div>
+          <div className="flex my-12 px-2 w-full">
+            <label className="flex-1 text-center font-semibold">User Type</label>
             <select
               disabled={isdisabled}
-              className="mr-12 flex-1 rounded-sm text-center focus:outline-blue-400"
+              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
               name="usertype"
               id="usertype"
               onChange={handleValueChange}
@@ -118,7 +118,7 @@ export default function Home() {
               <option value="Existing">Existing</option>
               <option value="New">New</option>
             </select>
-          </label>
+          </div>
           <div className="flex w-full justify-center my-6">
             <button
               disabled={isdisabled}
@@ -128,7 +128,6 @@ export default function Home() {
               Check Todo's
             </button>
           </div>
-        </div>
       </form>
     </>
   );

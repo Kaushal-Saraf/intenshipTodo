@@ -117,12 +117,12 @@ export default function id({ params }: { params: { id: string } }) {
     e.preventDefault();
     if(deleteidarray.length===0){
       toast.dismiss()
-      toast.error("Please enter correct input ids.")
+      toast.error("Please enter serial numbers.")
       return ;
     }
     else if(deleteidarray[0]===0 || deleteidarray[deleteidarray.length-1]>todos.length ){
       toast.dismiss()
-      toast.error("Please enter correct input ids.")
+      toast.error("Please enter correct serial numbers.")
       return ;
     }
     try {
@@ -182,6 +182,7 @@ export default function id({ params }: { params: { id: string } }) {
     }
   };
   const handleLogout = async () => {
+    toast.dismiss()
     router.push("/");
   };
   return (
@@ -305,7 +306,7 @@ export default function id({ params }: { params: { id: string } }) {
       <form onSubmit={handleCompletion}>
         <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
           <label htmlFor="completedinputs" className="mx-2 my-2">
-            Todo Id's I want mark as completed seperated by commas
+            Todo Serial Numbers I want mark as completed seperated by commas
           </label>
           <input
             type="text"
@@ -332,7 +333,7 @@ export default function id({ params }: { params: { id: string } }) {
       <form onSubmit={handleDeletion}>
         <div className="bg-blue-300 mx-6 my-4 px-2 py-2 rounded">
           <label htmlFor="inputs" className="mx-2  my-2 pr-[75px] w-[440px]">
-            Todo Id's I want to delete seperated by commas
+            Todo Serial Numbers I want to delete seperated by commas
           </label>
           <input
             type="text"

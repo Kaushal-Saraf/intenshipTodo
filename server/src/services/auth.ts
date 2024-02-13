@@ -8,7 +8,6 @@ async function setUser(payload:string , key:string) {
 async function getUser(token:string, key:string) {
   const payload = jwt.verify(token,key);
   return payload
-  
 }
 export{
     setUser,

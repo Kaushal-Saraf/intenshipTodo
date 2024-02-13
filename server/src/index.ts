@@ -2,6 +2,7 @@ import express from "express"
 import { router } from "./routes/route"
 import connects from "./config/db";
 import bodyParser from "body-parser";
+import { authMiddleWare } from "./controllers/middleWare";
 const cors = require('cors');
 
 require('dotenv').config();
@@ -12,6 +13,7 @@ app.use(cors({
     origin: "https://intenship-todo.vercel.app",
     credentials: true,
   })); 
+app.use(authMiddleWare)
 app.use("/",router)
 app.listen(process.env.PORT,()=>{
     console.log(`server started...`)
