@@ -39,7 +39,8 @@ export default function id({ params }: { params: { id: string } }) {
         if (result.todos.length !== 0) {
           setavilableTodos(true);
         }
-      } catch (error) {}
+      } catch (error) {
+      }
     };
     
     fetchData();

@@ -73,10 +73,10 @@ export default function Home() {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="w-[350px] p-4 bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
+        className="w-[375px] p-4 bg-blue-400 my-8 mx-auto rounded-lg shadow-sm"
       >
           <div className="flex mt-10 px-2 w-full">
-            <label htmlFor="name" className="flex-1 text-center font-semibold">
+            <label htmlFor="name" className=" text-center font-semibold">
               User Name
             </label>
             <input
@@ -85,14 +85,14 @@ export default function Home() {
               name="name"
               id="name"
               autoComplete="given-name"
-              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
+              className="text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
               onChange={handleChange}
               value={details?.name}
               readOnly={isdisabled}
             ></input>
           </div>
           <div className="flex my-12 px-2 w-full">
-            <label className="flex-1 text-center font-semibold">Password</label>
+            <label htmlFor= "password"className="text-center font-semibold">Password</label>
             <input
               readOnly={isdisabled}
               type="password"
@@ -100,16 +100,16 @@ export default function Home() {
               id="password"
               placeholder="********"
               autoComplete="current-password"
-              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
+              className="text-center mx-4 bg-blue-50 focus:outline-blue-400 text-blue-400"
               onChange={handleChange}
               value={details?.password}
             ></input>
           </div>
           <div className="flex my-12 px-2 w-full">
-            <label className="flex-1 text-center font-semibold">User Type</label>
+            <label htmlFor="usertype"className="text-center font-semibold">User Type</label>
             <select
               disabled={isdisabled}
-              className="flex-1 text-center mx-2 bg-blue-50 focus:outline-blue-400 text-blue-400"
+              className=" text-center mx-4 px-16 bg-blue-50 focus:outline-blue-400 text-blue-400"
               name="usertype"
               id="usertype"
               onChange={handleValueChange}
