@@ -5,15 +5,6 @@ import { enterCredentials, getHome } from "./services/userServices";
 import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getHome();
-      } catch (error) {}
-    };
-
-    fetchData();
-  }, []);
   const [details, setdetails] = useState({
     name: "",
     password: "",
